@@ -1,0 +1,36 @@
+# Build directories
+/build/
+
+# Meson build system
+meson-logs/
+meson-info/
+meson-private/
+
+# Ninja build files
+build.ninja
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Editor/OS files
+.DS_Store
+
+# Ignore compiled binaries and executables
+*.exe
+*.out
+*.o
+*.obj
+
+# Ignore temporary files
+*.swp
+*.swo
+
+# clangd index and cache
+.clangd/
+.clangd-index/
+.cache/
+clangd.db
+
+# clangd log files
+clangd.log
