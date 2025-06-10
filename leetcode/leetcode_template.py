@@ -6,8 +6,6 @@ import html
 import json
 import time
 
-session = requests.Session()
-
 def find_git_root(path=None):
     if path is None:
         path = os.getcwd()
@@ -145,7 +143,7 @@ def fetch_problem_info(slug):
     '''
     variables = {"titleSlug": slug}
     try:
-        resp = session.post(graphql_url, json={"query": query, "variables": variables}, timeout=3)
+        resp = requests.post(graphql_url, json={"query": query, "variables": variables})
         if resp.status_code == 200:
             data = resp.json()
             q = data.get("data", {}).get("question", {})
@@ -153,8 +151,8 @@ def fetch_problem_info(slug):
             desc_html = q.get("content", "")
             code_defs = q.get("codeDefinition", "[]")
             return qid, desc_html, code_defs
-    except Exception as e:
-        print(f"Network error: {e}")
+    except Exception:
+        pass
     return None, None, None
 
 def make_cpp_template(slug):
@@ -167,9 +165,6 @@ def make_cpp_template(slug):
         print("Failed to fetch problem number. Please check the slug.")
         return None, None
     filename = os.path.join(outdir, f"{qid}.cc")
-    if os.path.exists(filename):
-        # If file already exists, skip API and file generation
-        return filename, f"{qid}.cc"
     classname = "Solution"
     url = f"https://leetcode.com/problems/{slug}/description/"
     # Parse description

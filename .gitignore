@@ -34,3 +34,11 @@ clangd.db
 
 # clangd log files
 clangd.log
+
+# Python virtual environments
+.venv/
+venv/
+env/
+
+# VSCode settings
+.vscode/
