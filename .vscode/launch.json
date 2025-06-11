@@ -3,15 +3,11 @@
     "configurations": [
         {
             "name": "Run current file",
-            "type": "cppdbg",
+            "type": "lldb-dap",
             "request": "launch",
-            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "program": "${workspaceFolder}/build/${relativeFileDirname}/${fileBasenameNoExtension}",
             "args": [],
-            "stopAtEntry": false,
             "cwd": "${fileDirname}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "lldb",
             "preLaunchTask": "meson build"
         }
     ]

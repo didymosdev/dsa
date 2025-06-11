@@ -1,5 +1,4 @@
 problem_sources = [
-    '1653.cc',
     '3833.cc',
 ]
 

@@ -144,20 +144,88 @@ Constraints:
         1 <= sum(time) <= 100​​​​​​
 */
 
+#include <climits>
 #include <iostream>
+#include <numeric>
 #include <vector>
 using namespace std;
 
 class Solution {
  public:
+  int minTravelTime(int cur_pos, int cur_k, int cur_time,
+                    vector<vector<vector<int>>> &dp, int l, int n, int k,
+                    vector<int> &position, vector<int> &time) {
+    if (cur_pos == n - 1) {
+      return cur_k > 0 ? INT_MAX : 0;
+    }
+    if (dp[cur_pos][cur_k][cur_time] != -1) {
+      return dp[cur_pos][cur_k][cur_time];
+    }
+    int ans = INT_MAX;
+    int res = minTravelTime(cur_pos + 1, cur_k, time[cur_pos + 1], dp, l, n, k,
+                            position, time);
+    if (res != INT_MAX) {
+      ans = min(ans,
+                (position[cur_pos + 1] - position[cur_pos]) * cur_time + res);
+    }
+    if (cur_k > 0) {
+      int merge_cnt = 0;
+      int merge_time = time[cur_pos + 1];
+      for (int pos = cur_pos + 2; pos < n && cur_k - merge_cnt - 1 >= 0;
+           pos++) {
+        merge_cnt++;
+        merge_time += time[pos];
+        res = minTravelTime(pos, cur_k - merge_cnt, merge_time, dp, l, n, k,
+                            position, time);
+        if (res != INT_MAX) {
+          ans = min(ans, (position[pos] - position[cur_pos]) * cur_time + res);
+        }
+      }
+    }
+    return dp[cur_pos][cur_k][cur_time] = ans;
+  }
+
   int minTravelTime(int l, int n, int k, vector<int> &position,
                     vector<int> &time) {
-
-                    }
+    int sum = accumulate(begin(time), end(time), 0);
+    vector<vector<vector<int>>> dp(
+        n + 1, vector<vector<int>>(k + 1, vector<int>(sum, -1)));
+    return minTravelTime(0, k, time[0], dp, l, n, k, position, time);
+  }
 };
 
 int main() {
   Solution sol;
-  // TODO: Add sample test cases here
+
+  // Test Case 1
+  vector<int> position1{0, 3, 8, 10};
+  vector<int> time1{5, 8, 3, 6};
+  int result1 = sol.minTravelTime(10, 4, 1, position1, time1);
+  cout << "Test Case 1: " << result1 << endl;  // Expected: 62
+
+  // Test Case 2
+  vector<int> position2{0, 1, 2, 3, 5};
+  vector<int> time2{8, 3, 9, 3, 3};
+  int result2 = sol.minTravelTime(5, 5, 1, position2, time2);
+  cout << "Test Case 2: " << result2 << endl;  // Expected: 34
+
+  // Test Case 3: k = 0
+  vector<int> position3{0, 2, 5};
+  vector<int> time3{3, 4, 5};
+  int result3 = sol.minTravelTime(5, 3, 0, position3, time3);
+  cout << "Test Case 3: " << result3 << endl;  // Expected: 26
+
+  // Test Case 4: n = 2, k = 0
+  vector<int> position4{0, 5};
+  vector<int> time4{5, 5};
+  int result4 = sol.minTravelTime(5, 2, 0, position4, time4);
+  cout << "Test Case 4: " << result4 << endl;  // Expected: 25
+
+  // Test Case 5: n = 3, k = 1
+  vector<int> position5{0, 2, 5};
+  vector<int> time5{3, 4, 5};
+  int result5 = sol.minTravelTime(5, 3, 1, position5, time5);
+  cout << "Test Case 5: " << result5 << endl;  // Expected: 15
+
   return 0;
 }
