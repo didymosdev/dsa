@@ -92,13 +92,17 @@ class Solution {
       }
       int64_t total_wasted_space = 0;
       for (int64_t j = 0, k = 0; j < boxes[i].size(); j++) {
-        int64_t l = upper_bound(begin(packages) + k, end(packages), boxes[i][j]) - begin(packages);
+        int64_t l =
+            upper_bound(begin(packages) + k, end(packages), boxes[i][j]) -
+            begin(packages);
         total_wasted_space = total_wasted_space + (boxes[i][j] * (l - k));
         k = l;
       }
       min_wasted_space = min(min_wasted_space, total_wasted_space);
     }
-    return min_wasted_space == INT64_MAX ? -1 : (min_wasted_space - sum) % 1000000007;
+    return min_wasted_space == INT64_MAX
+               ? -1
+               : (min_wasted_space - sum) % 1000000007;
   }
 };
 
